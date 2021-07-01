@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 
 // 'graphql-request' is a great library when we want to Execute a Query or Mutation
 // & we don't want to set up a library with boilerplate like Apollo
@@ -7,6 +7,7 @@ import { GraphQLClient } from 'graphql-request';
 import { GoogleLogin } from 'react-google-login';
 
 import { withStyles } from '@material-ui/core/styles';
+import AuthContext from '../../context';
 // import Typography from "@material-ui/core/Typography";
 
 // user query
@@ -22,6 +23,9 @@ const ME_QUERY = `
 `;
 
 const Login = ({ classes }) => {
+  // To consume Context object, we need to use useContext hook
+  const { dispatch } = useContext(AuthContext);
+
   const onSuccess = async googleUser => {
     // console.log(googleUser);
     // User provide google credentials & we get this id_token
@@ -40,7 +44,7 @@ const Login = ({ classes }) => {
     // when we execute query from the client asking current user information
     // we will send it back to client from the server & redirect user to App component
     const data = await client.request(ME_QUERY);
-    console.log(data);
+    dispatch({ type: 'LOGIN_USER', payload: data.me });
   };
 
   return (

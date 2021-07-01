@@ -1,25 +1,45 @@
-import React from "react";
-import ReactDOM from "react-dom";
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import React, { useContext, useReducer } from 'react';
+import ReactDOM from 'react-dom';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
-import App from "./pages/App";
-import Splash from "./pages/Splash";
+import App from './pages/App';
+import Splash from './pages/Splash';
 
-import "mapbox-gl/dist/mapbox-gl.css";
-import * as serviceWorker from "./serviceWorker";
+// auth context
+import AuthContext from './context';
+
+// reducer
+import reducer from './reducer';
+
+import 'mapbox-gl/dist/mapbox-gl.css';
+import * as serviceWorker from './serviceWorker';
 
 const Root = () => {
+  // To consume Context object, we need to use useContext hook
+  const initialState = useContext(AuthContext);
+
+  // useReducer - to update root reducer which takes reducer & initial state
+  const [state, dispatch] = useReducer(reducer, initialState);
+  console.log({ state });
+
   return (
+    // Context returns an object with 2 values: special components
+    // { Provider, Consumer }
+    // Provider component wraps around a tree of components that can have an access to the Context Object
+    // using Provider component of Context object to make a value available to all
+    // children and grandchildren by using value={} property
     <Router>
-      <Switch>
-        <Route exact path="/" component={App} />
-        <Route path="/login" component={Splash} />
-      </Switch>
+      <AuthContext.Provider value={{ state, dispatch }}>
+        <Switch>
+          <Route exact path='/' component={App} />
+          <Route path='/login' component={Splash} />
+        </Switch>
+      </AuthContext.Provider>
     </Router>
   );
 };
 
-ReactDOM.render(<Root />, document.getElementById("root"));
+ReactDOM.render(<Root />, document.getElementById('root'));
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
