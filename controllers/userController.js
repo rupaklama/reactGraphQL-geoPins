@@ -5,9 +5,9 @@ const User = require('../models/User');
 
 // library which enables to verify the id token
 const { OAuth2Client } = require('google-auth-library');
-const client = new OAuth2Client(process.env.OAUTH_CLIENT_ID);
+const client = new OAuth2Client(process.env.OAUTH_CLIENT_ID); // OAUTH_CLIENT_ID in .env
 
-// find or create new user
+// Function to find or create a new user
 exports.findOrCreateUser = async token => {
   // verify auth token
   const googleUser = await verifyAuthToken(token);
@@ -25,7 +25,7 @@ const verifyAuthToken = async token => {
   try {
     const ticket = await client.verifyIdToken({
       idToken: token,
-      audience: process.env.OAUTH_CLIENT_ID,
+      audience: process.env.OAUTH_CLIENT_ID, // OAUTH_CLIENT_ID in .env
     });
 
     // returning google user
@@ -36,13 +36,17 @@ const verifyAuthToken = async token => {
 };
 
 // check if user exists with email
-// exec() to return Promise at the end
+// exec() to return Promise & adding it at the end
 const checkIfUserExists = async email => await User.findOne({ email }).exec();
 
-// create new user
+// create new user with query fields
 const createNewUser = googleUser => {
+  // destructuring require fields from google account
   const { name, email, picture } = googleUser;
 
+  // creating user with require fields above
   const user = { name, email, picture };
+
+  // using User constructor to create new user in db
   return new User(user).save();
 };

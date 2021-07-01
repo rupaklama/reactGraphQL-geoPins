@@ -26,10 +26,12 @@ const apolloServer = new ApolloServer({
   context: async ({ req }) => {
     // destructuring 'request object' to get any headers we are sending over
 
+    // initial values
     let authToken = null;
     let currentUser = null;
 
     try {
+      // getting 'idToken' from request header
       authToken = req.headers.authorization;
       if (authToken) {
         // find user if exists or create a new user
@@ -39,7 +41,7 @@ const apolloServer = new ApolloServer({
       console.error(`Unable to authenticate user with token ${authToken}`);
     }
 
-    // to make it available to Resolvers to execute query
+    // to make it available to Resolvers to execute a query
     return { currentUser };
   },
 });
