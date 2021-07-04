@@ -7,6 +7,8 @@ import { createContext } from 'react';
 const Context = createContext({
   currentUser: null,
   isAuth: false,
+  // marker draft to set it
+  draft: null,
 });
 
 export default Context;

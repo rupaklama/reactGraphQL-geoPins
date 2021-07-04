@@ -23,7 +23,7 @@ const Root = () => {
 
   // useReducer - to update root reducer which takes reducer & initial state
   const [state, dispatch] = useReducer(reducer, initialState);
-  console.log({ state });
+  // console.log({ state });
 
   return (
     // Context returns an object with 2 values: special components - { Provider, Consumer }
